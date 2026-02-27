@@ -1,50 +1,47 @@
 import Footer from '../../../components/user/Footer';
 import Header from '../../../components/user/Header';
+import img1 from "../../../assets/one.jpeg";
+import img2 from "../../../assets/ambasy.jpeg";
+import img3 from "../../../assets/three.jpeg";
+import doc from "../../../assets/doc.jpeg";
+import docu from "../../../assets/docu.jpeg";
+import docum from "../../../assets/docum.jpeg";
+import Image from 'next/image';
 
 export const metadata = { title: 'Home - South Africa Visa Immigration Services' };
 
 export default function HomePage() {
   return (
     <div>
-      <Header/>
+      <Header />
 
       {/* ─── HERO IMAGES ─── */}
       <div className="pub-hero">
-        {/* Image 1: SA passport/stamp */}
-        <img
-          src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=480&h=270&fit=crop&q=80"
-          alt="South Africa Visa"
-          onError="this.style.background='#1a4a8a';this.style.display='block'"
+        <Image
+          src={img1}
+          alt="Company Logo"
+          width={180}
+          height={60}
+          priority
         />
-        {/* Image 2: Table Mountain / Cape Town */}
-        <img
-          src="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=480&h=270&fit=crop&q=80"
-          alt="Cape Town South Africa"
-          onError="this.style.background='#2e7d32';this.style.display='block'"
+        <Image
+          src={img2}
+          alt="Company Logo"
+          width={180}
+          height={60}
+          priority
         />
-        {/* Images 3+4 side by side */}
-        <div className="pub-hero-split">
-          <img
-            src="https://images.unsplash.com/photo-1544785349-c4a5301826fd?w=240&h=270&fit=crop&q=80"
-            alt="Passports"
-            onError="this.style.background='#0d47a1'"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=240&h=270&fit=crop&q=80"
-            alt="Visa Map"
-            onError="this.style.background='#37474f'"
-          />
-        </div>
+        <Image
+          src={img3}
+          alt="Company Logo"
+          width={180}
+          height={60}
+          priority
+        />
       </div>
 
       {/* ─── CONTENT: Israel/SA visa info ─── */}
       <div className="pub-content">
-        {/* Breadcrumb — right aligned */}
-        <div className="pub-breadcrumb">
-          <a href="/home">Home</a>
-          <span>›</span>
-          <span>Track Your Application</span>
-        </div>
 
         <h2>South Africa visa for Indian citizens</h2>
 
@@ -71,40 +68,52 @@ export default function HomePage() {
       </div>
 
       {/* ─── VISA TYPES SECTION ─── */}
-      <div className="pub-section">
+      <div className="pub-section pub-content">
         <div className="pub-section-title">Type of South Africa Visas</div>
 
-        <div className="pub-visa-grid">
-          <div className="pub-visa-card">
-            <div className="pub-visa-card-label">Employment visa</div>
-            <div className="pub-visa-placeholder">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="#aaa">
-                <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
-              </svg>
-              <span style={{fontSize:12, color:'#888'}}>Employment Visa Document</span>
-            </div>
-          </div>
-          <div className="pub-visa-card">
-            <div className="pub-visa-card-label">Visit Visa</div>
-            <div className="pub-visa-placeholder">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="#aaa">
-                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
-              </svg>
-              <span style={{fontSize:12, color:'#888'}}>Visit Visa Document</span>
-            </div>
-          </div>
-          <div className="pub-visa-card">
-            <div className="pub-visa-card-label">Work Visa</div>
-            <div className="pub-visa-placeholder">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="#aaa">
-                <path d="M20 6h-2.18c.07-.44.18-.88.18-1.36 0-2.59-2.09-4.69-4.68-4.69-1.79 0-3.36 1.02-4.14 2.54l-.56 1.12L7.06 2.07C6.32.79 4.95 0 3.5 0 1.57 0 0 1.57 0 3.5c0 1.7 1.22 3.13 2.84 3.44L0 20h24L21.16 6.94C21.07 6.38 20.55 6 20 6z"/>
-              </svg>
-              <span style={{fontSize:12, color:'#888'}}>Work Visa Document</span>
-            </div>
-          </div>
-        </div>
+       <div className="pub-visa-grid">
+  <div className="pub-visa-card">
+    <div className="pub-visa-card-label">Employment Visa</div>
+    <div className="pub-visa-image">
+        <Image
+          src={doc}
+          alt="Company Logo"
+          width={180}
+          height={60}
+          priority
+        />
+    </div>
+  </div>
 
-        <p>Price may differ based on the residence location of the applicant</p>
+  <div className="pub-visa-card">
+    <div className="pub-visa-card-label">Visit Visa</div>
+    <div className="pub-visa-image">
+      <Image
+          src={docu}
+          alt="Company Logo"
+          width={180}
+          height={60}
+          priority
+        />
+    </div>
+  </div>
+
+  <div className="pub-visa-card">
+    <div className="pub-visa-card-label">Work Visa</div>
+    <div className="pub-visa-image">
+      <Image
+          src={docum}
+          alt="Company Logo"
+          width={180}
+          height={60}
+          priority
+        />
+    </div>
+  </div>
+</div>
+
+     <div className="pub-content">
+         <p>Price may differ based on the residence location of the applicant</p>
         <p>Documents pickup and drop charges, photograph development charges, taxes etc. will be additional.</p>
         <p>I have an Indian passport, do I need a visa to visit South Africa?</p>
         <p>
@@ -127,10 +136,11 @@ export default function HomePage() {
           Be able to convince the immigration officer that you have your family, property, assets, etc.
           that would serve as an incentive to come back to your home country;
         </p>
+     </div>
       </div>
 
       {/* ─── MORE CONTENT ─── */}
-      <div className="pub-section" style={{ paddingTop: 0 }}>
+      <div className="pub-section pub-content" style={{ paddingTop: 0 }}>
         <p>Be able to convince the immigration officer that you will leave the country before your South Africa visa expires;</p>
         <p>
           Have sufficient funds to support yourself in South Africa and the amount depends on how long you
