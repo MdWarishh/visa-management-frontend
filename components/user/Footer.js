@@ -8,12 +8,12 @@ export default function Footer() {
     {
       city: "Mumbai",
       phone: "022-49703927",
-      email: "Mumbai@southafricavisa.com",
+      email: "mumbai@southafricavisa.com",
     },
     {
       city: "Chennai",
       phone: "080-41251257",
-      email: "Chennai@southafricavisa.com",
+      email: "chennai@southafricavisa.com",
     },
   ];
 
