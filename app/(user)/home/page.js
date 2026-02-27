@@ -6,6 +6,8 @@ import img3 from "../../../assets/three.jpeg";
 import doc from "../../../assets/doc.jpeg";
 import docu from "../../../assets/docu.jpeg";
 import docum from "../../../assets/docum.jpeg";
+import last from "../../../assets/south.jpeg";
+import lasto from "../../../assets/air.jpeg";
 import Image from 'next/image';
 
 export const metadata = { title: 'Home - South Africa Visa Immigration Services' };
@@ -149,21 +151,29 @@ export default function HomePage() {
 
         {/* Second hero images */}
         <div className="pub-hero-2" style={{ marginTop: 16 }}>
-          <img
-            src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=480&h=200&fit=crop&q=80"
-            alt="South Africa Flag"
-            onError="this.style.background='#007A4D'"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=480&h=200&fit=crop&q=80"
-            alt="Airplane"
-            onError="this.style.background='#37474f'"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=480&h=200&fit=crop&q=80"
-            alt="Money / Currency"
-            onError="this.style.background='#4e342e'"
-          />
+          <Image
+          src={last}
+          alt="Company Logo"
+          width={180}
+          height={60}
+          priority
+        />
+          <Image
+          src={lasto}
+          alt="Company Logo"
+          width={180}
+          height={60}
+          priority
+        />
+          <Image
+          src={img3}
+          alt="Company Logo"
+          width={180}
+          height={60}
+          priority
+        />
+          
+          
         </div>
 
         <br />

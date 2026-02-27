@@ -11,7 +11,7 @@ export default function Footer() {
       email: "Mumbai@southafricavisa.com",
     },
     {
-      city: "Bangalore",
+      city: "Chennai",
       phone: "080-41251257",
       email: "Chennai@southafricavisa.com",
     },
@@ -167,20 +167,15 @@ export default function Footer() {
           background: var(--footer-accent);
           color: #fff;
           font-family: 'DM Sans', sans-serif;
-          font-size: 12px;
+          font-size: 9px;
           font-weight: 500;
           letter-spacing: 0.06em;
           text-transform: uppercase;
           padding: 8px 16px;
           border: none;
-          cursor: pointer;
+          cursor: default;
           text-decoration: none;
-          transition: background 0.2s, transform 0.15s;
-        }
-
-        .pf-email-btn:hover {
-          background: #a93226;
-          transform: translateY(-1px);
+          user-select: text;
         }
 
         .pf-email-btn svg { opacity: 0.85; }
@@ -383,13 +378,13 @@ export default function Footer() {
                   <br />
                   <em style={{ fontSize: 11, color: "var(--text-muted)" }}>except public holidays</em>
                 </div>
-                <a href={`mailto:${o.email}`} className="pf-email-btn">
+                <span className="pf-email-btn">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <rect x="2" y="4" width="20" height="16" rx="2" />
                     <path d="m2 7 10 7 10-7" />
                   </svg>
                   {o.email}
-                </a>
+                </span>
               </div>
             ))}
           </div>
