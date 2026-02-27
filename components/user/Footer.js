@@ -167,10 +167,10 @@ export default function Footer() {
           background: var(--footer-accent);
           color: #fff;
           font-family: 'DM Sans', sans-serif;
-          font-size: 9px;
+          font-size: 7px;
           font-weight: 500;
           letter-spacing: 0.06em;
-          text-transform: uppercase;
+          text-transform: none;
           padding: 8px 16px;
           border: none;
           cursor: default;
@@ -340,7 +340,7 @@ export default function Footer() {
           .pf-office-card + .pf-office-card { border-left: none; border-top: 1px solid var(--footer-border); }
           .pf-office-card { padding: 22px 18px; }
           .pf-office-city { font-size: 19px; }
-          .pf-email-btn { font-size: 11px; padding: 7px 12px; word-break: break-all; }
+          .pf-email-btn { font-size: 7px; padding: 5px 8px; word-break: break-all; }
           .pf-info-grid { grid-template-columns: 1fr; margin: 0 16px; }
           .pf-info-block + .pf-info-block { border-left: none; border-top: 1px solid var(--footer-border); padding-left: 0 !important; }
           .pf-info-block { padding: 24px 0; }
@@ -353,7 +353,7 @@ export default function Footer() {
         @media (max-width: 400px) {
           .pf-contact-header-label { font-size: 11px; letter-spacing: 0.12em; }
           .pf-office-city { font-size: 17px; }
-          .pf-email-btn { font-size: 10px; padding: 6px 10px; }
+          .pf-email-btn { font-size: 7px; padding: 5px 8px; }
         }
       `}</style>
 
