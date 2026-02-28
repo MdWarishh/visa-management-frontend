@@ -10,6 +10,69 @@ const STATUSES  = ['Pending','Under Review','Approved','Rejected','Issued'];
 const isNew = (id) => id === 'new';
 const toDateInput = (d) => { if (!d) return ''; return new Date(d).toISOString().slice(0, 10); };
 
+/* ── Responsive styles injected once ── */
+const responsiveCSS = `
+  .edit-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 18px;
+    align-items: start;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 18px;
+  }
+  .id-toggle-wrap {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
+  .id-toggle-btn {
+    flex: 1 1 auto;
+    min-width: 120px;
+  }
+  .submit-row {
+    margin-top: 18px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  .submit-row a,
+  .submit-row button {
+    flex: 0 0 auto;
+  }
+
+  @media (max-width: 768px) {
+    .edit-layout {
+      grid-template-columns: 1fr;
+    }
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+    .submit-row {
+      flex-direction: column-reverse;
+    }
+    .submit-row a,
+    .submit-row button {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .id-toggle-wrap {
+      flex-direction: column;
+    }
+    .id-toggle-btn {
+      width: 100%;
+    }
+  }
+`;
+
 export default function EditPage() {
   const { id }   = useParams();
   const router   = useRouter();
@@ -39,7 +102,7 @@ export default function EditPage() {
   const [photoPreview, setPhotoPreview] = useState(null);
   const [visaDocFile,  setVisaDocFile]  = useState(null);
   const [visaDocName,  setVisaDocName]  = useState('');
-  const [existingVisaDoc, setExistingVisaDoc] = useState(null); // {type, name}
+  const [existingVisaDoc, setExistingVisaDoc] = useState(null);
 
   const [loading, setLoading] = useState(!creating);
   const [saving,  setSaving]  = useState(false);
@@ -135,6 +198,9 @@ export default function EditPage() {
 
   return (
     <div className="fade">
+      {/* Inject responsive CSS */}
+      <style>{responsiveCSS}</style>
+
       {/* Breadcrumb */}
       <div className="breadcrumb" style={{ marginBottom:18 }}>
         <Link href="/admin/applications">Applications</Link>
@@ -150,136 +216,140 @@ export default function EditPage() {
       )}
 
       <form onSubmit={handleSubmit}>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 340px', gap:18, alignItems:'start' }}>
+        <div className="edit-layout">
 
           {/* ── LEFT: Application Details ── */}
           <div className="card">
             <div className="card-head">Application Details</div>
-            <div style={{ padding:'18px 20px', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'14px 18px' }}>
+            <div style={{ padding:'18px 20px' }}>
+              <div className="form-grid">
 
-              {/* Identifier Type Toggle */}
-              <div className="fg" style={{ gridColumn:'1 / -1' }}>
-                <label>Identifier Type <span style={{ color:'#ef4444' }}>*</span></label>
-                <div style={{ display:'flex', gap:8, marginTop:4 }}>
-                  {['passport','control'].map(t => (
-                    <button
-                      key={t} type="button"
-                      onClick={() => !readOnly && setForm(p => ({ ...p, identifierType: t }))}
-                      style={{
-                        padding:'8px 20px', borderRadius:6, fontSize:13, fontWeight:600, cursor: readOnly ? 'default' : 'pointer',
-                        border:`2px solid ${form.identifierType === t ? '#1a56db' : '#e5e7eb'}`,
-                        background: form.identifierType === t ? '#eff6ff' : '#fff',
-                        color: form.identifierType === t ? '#1a56db' : '#6b7280',
-                        transition:'all 0.15s',
-                      }}
-                    >
-                      {t === 'passport' ? '🛂 Passport Number' : '🔢 Control Number'}
-                    </button>
-                  ))}
+                {/* Identifier Type Toggle */}
+                <div className="fg" style={{ gridColumn:'1 / -1' }}>
+                  <label>Identifier Type <span style={{ color:'#ef4444' }}>*</span></label>
+                  <div className="id-toggle-wrap">
+                    {['passport','control'].map(t => (
+                      <button
+                        key={t} type="button"
+                        className="id-toggle-btn"
+                        onClick={() => !readOnly && setForm(p => ({ ...p, identifierType: t }))}
+                        style={{
+                          padding:'8px 20px', borderRadius:6, fontSize:13, fontWeight:600, cursor: readOnly ? 'default' : 'pointer',
+                          border:`2px solid ${form.identifierType === t ? '#1a56db' : '#e5e7eb'}`,
+                          background: form.identifierType === t ? '#eff6ff' : '#fff',
+                          color: form.identifierType === t ? '#1a56db' : '#6b7280',
+                          transition:'all 0.15s',
+                        }}
+                      >
+                        {t === 'passport' ? '🛂 Passport Number' : '🔢 Control Number'}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* ID Number field */}
-              <div className="fg" style={{ gridColumn:'1 / -1' }}>
-                <label>
-                  {form.identifierType === 'passport' ? 'Passport Number' : 'Control Number'}
-                  <span style={{ color:'#ef4444' }}> *</span>
-                </label>
-                {form.identifierType === 'passport' ? (
-                  <input className="fi" placeholder="e.g. A1234567" readOnly={readOnly || !creating}
-                    value={form.passportNumber}
-                    onChange={e => setForm(p => ({ ...p, passportNumber: e.target.value.toUpperCase() }))}
-                    style={readOnly || !creating ? { background:'#f9fafb', color:'#6b7280' } : {}}
-                  />
-                ) : (
-                  <input className="fi" placeholder="e.g. CTL-2024-001" readOnly={readOnly}
-                    value={form.controlNumber}
-                    onChange={e => setForm(p => ({ ...p, controlNumber: e.target.value.toUpperCase() }))}
-                    style={readOnly ? { background:'#f9fafb', color:'#6b7280' } : {}}
-                  />
-                )}
-              </div>
+                {/* ID Number field */}
+                <div className="fg" style={{ gridColumn:'1 / -1' }}>
+                  <label>
+                    {form.identifierType === 'passport' ? 'Passport Number' : 'Control Number'}
+                    <span style={{ color:'#ef4444' }}> *</span>
+                  </label>
+                  {form.identifierType === 'passport' ? (
+                    <input className="fi" placeholder="e.g. A1234567" readOnly={readOnly || !creating}
+                      value={form.passportNumber}
+                      onChange={e => setForm(p => ({ ...p, passportNumber: e.target.value.toUpperCase() }))}
+                      style={readOnly || !creating ? { background:'#f9fafb', color:'#6b7280' } : {}}
+                    />
+                  ) : (
+                    <input className="fi" placeholder="e.g. CTL-2024-001" readOnly={readOnly}
+                      value={form.controlNumber}
+                      onChange={e => setForm(p => ({ ...p, controlNumber: e.target.value.toUpperCase() }))}
+                      style={readOnly ? { background:'#f9fafb', color:'#6b7280' } : {}}
+                    />
+                  )}
+                </div>
 
-              <div className="fg">
-                <label>Full Name <span style={{ color:'#ef4444' }}>*</span></label>
-                <input className="fi" placeholder="Applicant full name" readOnly={readOnly}
-                  value={form.fullName} onChange={set('fullName')} />
-              </div>
+                <div className="fg">
+                  <label>Full Name <span style={{ color:'#ef4444' }}>*</span></label>
+                  <input className="fi" placeholder="Applicant full name" readOnly={readOnly}
+                    value={form.fullName} onChange={set('fullName')} />
+                </div>
 
-              <div className="fg">
-                <label>Date of Birth <span style={{ color:'#ef4444' }}>*</span></label>
-                <input className="fi" type="date" readOnly={readOnly}
-                  value={form.dateOfBirth} onChange={set('dateOfBirth')} />
-              </div>
+                <div className="fg">
+                  <label>Date of Birth <span style={{ color:'#ef4444' }}>*</span></label>
+                  <input className="fi" type="date" readOnly={readOnly}
+                    value={form.dateOfBirth} onChange={set('dateOfBirth')} />
+                </div>
 
-              <div className="fg">
-                <label>Application Number <span style={{ color:'#ef4444' }}>*</span></label>
-                <input className="fi" placeholder="APP-2024-001" readOnly={readOnly || !creating}
-                  value={form.applicationNumber} onChange={set('applicationNumber')}
-                  style={!creating ? { background:'#f9fafb', color:'#6b7280' } : {}} />
-              </div>
+                <div className="fg">
+                  <label>Application Number <span style={{ color:'#ef4444' }}>*</span></label>
+                  <input className="fi" placeholder="APP-2024-001" readOnly={readOnly || !creating}
+                    value={form.applicationNumber} onChange={set('applicationNumber')}
+                    style={!creating ? { background:'#f9fafb', color:'#6b7280' } : {}} />
+                </div>
 
-              <div className="fg">
-                <label>Application Date</label>
-                <input className="fi" type="date" readOnly={readOnly}
-                  value={form.applicationDate} onChange={set('applicationDate')} />
-              </div>
+                <div className="fg">
+                  <label>Application Date</label>
+                  <input className="fi" type="date" readOnly={readOnly}
+                    value={form.applicationDate} onChange={set('applicationDate')} />
+                </div>
 
-              <div className="fg">
-                <label>Visa Number</label>
-                <input className="fi" placeholder="e.g. CEG307412/1217" readOnly={readOnly}
-                  value={form.visaNumber} onChange={set('visaNumber')} />
-              </div>
+                <div className="fg">
+                  <label>Visa Number</label>
+                  <input className="fi" placeholder="e.g. CEG307412/1217" readOnly={readOnly}
+                    value={form.visaNumber} onChange={set('visaNumber')} />
+                </div>
 
-              <div className="fg">
-                <label>Visa Type</label>
-                <select className="sel" disabled={readOnly} value={form.visaType} onChange={set('visaType')}>
-                  <option value="">— Select —</option>
-                  {['Employment Visa','Work Visa','Tourist Visa','Business Visa','Student Visa','Medical Visa','Family Visa','Transit Visa'].map(v => (
-                    <option key={v}>{v}</option>
-                  ))}
-                </select>
-              </div>
+                <div className="fg">
+                  <label>Visa Type</label>
+                  <select className="sel" disabled={readOnly} value={form.visaType} onChange={set('visaType')}>
+                    <option value="">— Select —</option>
+                    {['Employment Visa','Work Visa','Tourist Visa','Business Visa','Student Visa','Medical Visa','Family Visa','Transit Visa'].map(v => (
+                      <option key={v}>{v}</option>
+                    ))}
+                  </select>
+                </div>
 
-              <div className="fg">
-                <label>Profession</label>
-                <input className="fi" placeholder="e.g. Engineer" readOnly={readOnly}
-                  value={form.profession} onChange={set('profession')} />
-              </div>
+                <div className="fg">
+                  <label>Profession</label>
+                  <input className="fi" placeholder="e.g. Engineer" readOnly={readOnly}
+                    value={form.profession} onChange={set('profession')} />
+                </div>
 
-              <div className="fg">
-                <label>Company Name</label>
-                <input className="fi" placeholder="Employer company" readOnly={readOnly}
-                  value={form.companyName} onChange={set('companyName')} />
-              </div>
+                <div className="fg">
+                  <label>Company Name</label>
+                  <input className="fi" placeholder="Employer company" readOnly={readOnly}
+                    value={form.companyName} onChange={set('companyName')} />
+                </div>
 
-              <div className="fg">
-                <label>Visa Issue Date</label>
-                <input className="fi" type="date" readOnly={readOnly}
-                  value={form.visaIssueDate} onChange={set('visaIssueDate')} />
-              </div>
+                <div className="fg">
+                  <label>Visa Issue Date</label>
+                  <input className="fi" type="date" readOnly={readOnly}
+                    value={form.visaIssueDate} onChange={set('visaIssueDate')} />
+                </div>
 
-              <div className="fg">
-                <label>Visa Expiry Date</label>
-                <input className="fi" type="date" readOnly={readOnly}
-                  value={form.visaExpiryDate} onChange={set('visaExpiryDate')} />
-              </div>
+                <div className="fg">
+                  <label>Visa Expiry Date</label>
+                  <input className="fi" type="date" readOnly={readOnly}
+                    value={form.visaExpiryDate} onChange={set('visaExpiryDate')} />
+                </div>
 
-              <div className="fg">
-                <label>Country <span style={{ color:'#ef4444' }}>*</span></label>
-                <input className="fi" placeholder="e.g. India" readOnly={readOnly}
-                  value={form.country} onChange={set('country')} />
-              </div>
+                <div className="fg">
+                  <label>Country <span style={{ color:'#ef4444' }}>*</span></label>
+                  <input className="fi" placeholder="e.g. India" readOnly={readOnly}
+                    value={form.country} onChange={set('country')} />
+                </div>
 
-              <div className="fg">
-                <label>Message / Note</label>
-                <input className="fi" placeholder="e.g. Work Permit Israel" readOnly={readOnly}
-                  value={form.message} onChange={set('message')} />
+                <div className="fg">
+                  <label>Message / Note</label>
+                  <input className="fi" placeholder="e.g. Work Permit Israel" readOnly={readOnly}
+                    value={form.message} onChange={set('message')} />
+                </div>
+
               </div>
             </div>
           </div>
 
-          {/* ── RIGHT: Status + Photo + Visa Document ── */}
+          {/* ── RIGHT: Status + Visa Document ── */}
           <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
 
             {/* Status */}
@@ -298,30 +368,7 @@ export default function EditPage() {
               </div>
             </div>
 
-            {/* Photo */}
-            {/* <div className="card">
-              <div className="card-head">Applicant Photo</div>
-              <div style={{ padding:'14px 16px' }}>
-                {photoPreview && (
-                  <div style={{ marginBottom:10, textAlign:'center' }}>
-                    <img src={photoPreview} alt="Photo"
-                      style={{ width:100, height:120, objectFit:'cover', borderRadius:6, border:'1px solid #e5e7eb' }} />
-                  </div>
-                )}
-                {!readOnly && (
-                  <label style={{ display:'block', cursor:'pointer' }}>
-                    <div style={{ border:'2px dashed #d1d5db', borderRadius:8, padding:'12px', textAlign:'center', fontSize:12, color:'#6b7280', background:'#f9fafb' }}>
-                      <div style={{ fontSize:20, marginBottom:4 }}>📷</div>
-                      Click to upload photo<br/>
-                      <span style={{ fontSize:10, color:'#9ca3af' }}>JPG, PNG (max 5MB)</span>
-                    </div>
-                    <input type="file" accept=".jpg,.jpeg,.png" onChange={handlePhoto} style={{ display:'none' }} />
-                  </label>
-                )}
-              </div>
-            </div> */}
-
-            {/* ── Visa Document Upload — NEW ── */}
+            {/* ── Visa Document Upload ── */}
             <div className="card">
               <div className="card-head">Visa Document</div>
               <div style={{ padding:'14px 16px' }}>
@@ -371,7 +418,7 @@ export default function EditPage() {
 
         {/* ── Submit ── */}
         {!readOnly && (
-          <div style={{ marginTop:18, display:'flex', gap:10, justifyContent:'flex-end' }}>
+          <div className="submit-row">
             <Link href="/admin/applications" className="btn btn-secondary">Cancel</Link>
             <button type="submit" className="btn btn-primary" disabled={saving} style={{ minWidth:140, justifyContent:'center' }}>
               {saving

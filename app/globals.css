@@ -450,6 +450,14 @@ tbody td {
 }
 .fi:disabled, .fi[readonly] { background: #f9fafb; color: #9ca3af; cursor: not-allowed; }
 
+/* Permissions checkboxes grid */
+.perms-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 8px;
+}
+
 .fi-row { display: flex; gap: 10px; }
 .fi-row .fg { flex: 1; }
 
@@ -623,3 +631,217 @@ tbody td {
 /* Alert */
 .alert-error { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px 16px; color: #b91c1c; font-size: 13px; margin-bottom: 16px; display: flex; gap: 8px; align-items: flex-start; }
 .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px 16px; color: #15803d; font-size: 13px; margin-bottom: 16px; display: flex; gap: 8px; align-items: flex-start; }
+
+/* ══════════════════════════════════════════════════════════════
+   MODAL — Center fix (Manage Users > Add User popup)
+══════════════════════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.modal {
+  background: #fff; border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  width: 100%; max-width: 520px;
+  animation: modalIn 0.2s ease both;
+  margin: auto;
+  /* Ensure modal never goes off screen */
+  position: relative;
+  max-height: none;
+}
+@keyframes modalIn {
+  from { opacity:0; transform: scale(0.95) translateY(-8px); }
+  to   { opacity:1; transform: scale(1) translateY(0); }
+}
+
+/* Modal header/body/footer common pattern */
+.modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  max-height: calc(90vh - 130px);
+  -webkit-overflow-scrolling: touch;
+}
+.modal-foot {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  background: #f8f9fb;
+  border-radius: 0 0 12px 12px;
+  flex-wrap: wrap;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HAMBURGER — mobile sidebar toggle
+══════════════════════════════════════════════════════════════ */
+.hamburger {
+  display: none;
+  position: fixed; top:14px; left:14px;
+  z-index: 200;
+  background: var(--sidebar-bg);
+  border: none; border-radius: 8px;
+  padding: 9px 10px;
+  cursor: pointer;
+  flex-direction: column; gap: 5px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.hamburger span {
+  display: block; width:22px; height:2px;
+  background: #fff; border-radius: 2px;
+}
+
+/* Sidebar overlay backdrop */
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset:0;
+  background: rgba(0,0,0,0.5);
+  z-index: 149;
+}
+.sidebar-overlay.open { display: block; }
+
+/* Sidebar close button inside sidebar on mobile */
+.sidebar-close-btn {
+  display: none;
+  position: absolute; top:12px; right:12px;
+  background: rgba(255,255,255,0.1);
+  border: none; border-radius: 6px;
+  color: #fff; font-size:16px;
+  cursor: pointer;
+  width:30px; height:30px;
+  align-items: center; justify-content: center;
+  z-index: 10;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .info-grid-3 { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  /* Show hamburger */
+  .hamburger { display: flex; }
+  .sidebar-close-btn { display: flex; }
+
+  /* Sidebar hidden off-screen */
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    z-index: 150;
+  }
+  .sidebar.open { transform: translateX(0); }
+
+  /* Main content full width */
+  .admin-wrap { margin-left: 0; }
+
+  /* Page padding — top space for hamburger */
+  .page-wrap { padding: 68px 16px 24px; }
+
+  /* Titles */
+  .page-title { font-size: 20px; margin-bottom: 14px; }
+  .page-title-center { font-size: 22px; }
+
+  /* Stat cards */
+  .stats-row { grid-template-columns: repeat(2,1fr); gap:10px; margin-bottom:14px; }
+  .stat-card  { padding: 14px 16px; }
+  .stat-value { font-size: 30px; letter-spacing:-1px; }
+
+  /* Dashboard */
+  .dashboard-grid { grid-template-columns: 1fr; gap:12px; }
+
+  /* Filter bar */
+  .filter-bar { padding: 10px 12px; gap:8px; }
+  .search-wrap { max-width:100%; width:100%; flex:unset; }
+  .filter-bar .btn { flex: 1; justify-content: center; }
+
+  /* Table */
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Pagination */
+  .pagination { flex-direction:column; gap:8px; padding:12px 14px; }
+
+  /* Form info grid */
+  .info-grid-3 { grid-template-columns: 1fr; }
+  .info-section { border-right:none; border-bottom:1px solid var(--border); padding:14px 16px; }
+  .info-section:last-child { border-bottom:none; }
+
+  /* Status row stack */
+  .status-row { flex-direction:column; gap:12px; }
+
+  /* Fi-row stack */
+  .fi-row { flex-direction:column; gap:0; }
+
+  /* Form actions */
+  .form-actions { flex-wrap:wrap; gap:8px; padding:12px 14px; }
+
+  /* Login / Track cards */
+  .login-card { padding: 26px 18px; }
+  .track-card { padding: 26px 18px; }
+
+  /* View details top bar */
+  .view-action-bar { flex-direction:column; align-items:stretch !important; }
+  .view-action-bar > div { width:100%; }
+
+  /* ── MODAL MOBILE FIX ── */
+  .modal-overlay {
+    align-items: flex-start;
+    padding: 12px;
+  }
+  .modal {
+    max-width: 100%;
+    margin: 0 auto;
+    border-radius: 10px;
+  }
+  .modal-body {
+    max-height: calc(100svh - 160px);
+    padding: 16px;
+  }
+  .modal-head { padding: 14px 16px; }
+  .modal-foot { padding: 12px 16px; }
+
+  /* Add user form inside modal — stack fields */
+  .modal .fi-row { flex-direction: column; gap: 0; }
+  .modal .fg { margin-bottom: 12px; }
+  .modal .fi { font-size: 16px; } /* Prevent iOS zoom on input focus */
+
+  /* Permissions checkboxes grid on mobile */
+  .perms-grid { grid-template-columns: 1fr 1fr !important; gap: 8px; }
+}
+
+@media (max-width: 480px) {
+  .stats-row { grid-template-columns: 1fr; }
+  .stat-value { font-size: 26px; }
+  .page-wrap  { padding: 62px 12px 16px; }
+  .btn        { padding: 8px 12px; font-size:12px; }
+  thead th    { padding: 9px 10px; font-size:10.5px; }
+  tbody td    { padding: 10px; font-size:12px; }
+  .pg-btn     { min-width:28px; height:28px; font-size:12px; }
+  .page-title { font-size:18px; }
+
+  /* Modal full screen on very small phones */
+  .modal-overlay { padding: 0; align-items: flex-end; }
+  .modal {
+    border-radius: 16px 16px 0 0;
+    max-width: 100%;
+    width: 100%;
+  }
+  .modal-body { max-height: 75svh; }
+
+  /* Form inside modal */
+  .modal .info-grid-3 { grid-template-columns: 1fr; }
+  .modal .fi { padding: 10px; }
+  .perms-grid { grid-template-columns: 1fr !important; }
+}

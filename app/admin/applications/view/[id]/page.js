@@ -20,17 +20,39 @@ const STATUS_COLORS = {
   'Issued':       { bg:'#f3e8ff', color:'#6b21a8' },
 };
 
-// Print only uploaded visa doc
-const printVisaDoc = (appNo) => {
-  const el = document.getElementById('admin-visa-doc-area');
-  if (!el) { toast.error('No document to print'); return; }
+// Print visa document — image ya PDF dono properly handle karta hai
+const printVisaDoc = (appNo, docBlobUrl, docType) => {
+  if (!docBlobUrl) { toast.error('No document to print'); return; }
+
+  if (docType === 'pdf') {
+    // PDF: blob URL ko directly new tab mein kholo — browser ka native PDF print use hoga
+    const w = window.open(docBlobUrl, '_blank');
+    if (!w) { toast.error('Popup blocked. Please allow popups for this site.'); return; }
+    // PDF viewer load hone ke baad print dialog
+    w.addEventListener('load', () => { setTimeout(() => { w.print(); }, 500); });
+    // Fallback agar load event na chale
+    setTimeout(() => { try { w.print(); } catch(e) {} }, 2000);
+    return;
+  }
+
+  // Image: naya window kholo, image load hone ke BAAD print karo — turant band nahi hoga
   const w = window.open('', '_blank');
+  if (!w) { toast.error('Popup blocked. Please allow popups for this site.'); return; }
   w.document.write(`<!DOCTYPE html><html><head>
     <title>Visa-${appNo || 'document'}</title>
-    <style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Roboto',Arial,sans-serif;background:#fff;}@page{margin:8mm;}img{max-width:100%;height:auto;display:block;}</style>
-  </head><body>${el.innerHTML}</body></html>`);
-  w.document.close(); w.focus();
-  setTimeout(() => { w.print(); w.close(); }, 600);
+    <style>
+      * { margin:0; padding:0; box-sizing:border-box; }
+      body { background:#fff; display:flex; justify-content:center; }
+      @page { margin:8mm; }
+      img { max-width:100%; height:auto; display:block; }
+    </style>
+  </head><body>
+    <img src="${docBlobUrl}" alt="Visa Document"
+      onload="window.print();"
+      onerror="document.body.innerHTML='<p style=color:red;padding:20px>Image load failed.</p>';" />
+  </body></html>`);
+  w.document.close();
+  w.focus();
 };
 
 export default function ViewDetailsPage() {
@@ -250,7 +272,7 @@ export default function ViewDetailsPage() {
           {docBlobUrl && (
             <div style={{ textAlign:'center', marginTop:20 }}>
               <button
-                onClick={() => printVisaDoc(data.applicationNumber)}
+                onClick={() => printVisaDoc(data.applicationNumber, docBlobUrl, data.visaDocumentType)}
                 style={{ background:'#1565c0', color:'#fff', border:'none', padding:'13px 60px', fontSize:15, fontWeight:700, cursor:'pointer', borderRadius:4, letterSpacing:'1px' }}
               >
                 PRINT RESULT

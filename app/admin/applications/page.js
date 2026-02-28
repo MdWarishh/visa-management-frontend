@@ -114,7 +114,6 @@ export default function ApplicationsPage() {
                 <th>#</th>
                 <th>Application No</th>
                 <th>Name</th>
-                <th>Passport No</th>
                 <th>Visa No</th>
                 <th>Visa Type</th>
                 <th>Country</th>
@@ -128,14 +127,14 @@ export default function ApplicationsPage() {
               {loading ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i}>
-                    {Array.from({ length: 11 }).map((_, j) => (
+                    {Array.from({ length: 10 }).map((_, j) => (
                       <td key={j}><div className="skel" style={{ height:11, width:'80%' }} /></td>
                     ))}
                   </tr>
                 ))
               ) : rows.length === 0 ? (
                 <tr>
-                  <td colSpan={11} style={{ textAlign:'center', padding:'52px 0', color:'#9ca3af' }}>
+                  <td colSpan={10} style={{ textAlign:'center', padding:'52px 0', color:'#9ca3af' }}>
                     <div style={{ fontSize:36, marginBottom:10 }}>📋</div>
                     <div style={{ fontWeight:600, fontSize:14, marginBottom:4 }}>
                       {search || status ? 'No results found' : 'No applications yet'}
@@ -157,7 +156,6 @@ export default function ApplicationsPage() {
                       </span>
                     </td>
                     <td style={{ fontWeight:500 }}>{c.fullName}</td>
-                    <td style={{ fontFamily:'monospace', fontSize:12 }}>{c.passportNumber}</td>
                     <td style={{ fontFamily:'monospace', fontSize:12, color:'#374151' }}>{c.visaNumber || '—'}</td>
                     <td style={{ fontSize:12.5 }}>{c.visaType || '—'}</td>
                     <td style={{ fontSize:12.5 }}>{c.country}</td>

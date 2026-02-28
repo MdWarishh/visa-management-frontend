@@ -11,21 +11,37 @@ const fmt = (d) => {
   return `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()}`;
 };
 
-const printOnlyDoc = (appNo) => {
-  const el = document.getElementById('user-visa-doc-area');
-  if (!el) { alert('No document to print.'); return; }
+const printOnlyDoc = (appNo, visaDocUrl, visaDocType) => {
+  if (!visaDocUrl) { alert('No document to print.'); return; }
+
+  if (visaDocType === 'pdf') {
+    // PDF: directly new tab mein open karo — browser native PDF print use hoga
+    const w = window.open(visaDocUrl, '_blank');
+    if (!w) { alert('Popup blocked. Please allow popups for this site.'); return; }
+    w.addEventListener('load', () => { setTimeout(() => { w.print(); }, 500); });
+    // Fallback agar load event na chale
+    setTimeout(() => { try { w.print(); } catch(e) {} }, 2000);
+    return;
+  }
+
+  // Image: naya window kholo, image POORI load hone ke BAAD print — turant band nahi hoga
   const w = window.open('', '_blank');
+  if (!w) { alert('Popup blocked. Please allow popups for this site.'); return; }
   w.document.write(`<!DOCTYPE html><html><head>
     <title>Visa-${appNo || 'document'}</title>
     <style>
-      *{margin:0;padding:0;box-sizing:border-box;}
-      body{font-family:'Roboto',Arial,sans-serif;background:#fff;}
-      @page{margin:8mm;}
-      img{max-width:100%;height:auto;display:block;}
+      * { margin:0; padding:0; box-sizing:border-box; }
+      body { background:#fff; display:flex; justify-content:center; }
+      @page { margin:8mm; }
+      img { max-width:100%; height:auto; display:block; }
     </style>
-  </head><body>${el.innerHTML}</body></html>`);
-  w.document.close(); w.focus();
-  setTimeout(() => { w.print(); w.close(); }, 600);
+  </head><body>
+    <img src="${visaDocUrl}" alt="Visa Document"
+      onload="window.print();"
+      onerror="document.body.innerHTML='<p style=color:red;padding:20px>Image load failed. Please try again.</p>';" />
+  </body></html>`);
+  w.document.close();
+  w.focus();
 };
 
 function ResultContent() {
@@ -118,7 +134,7 @@ function ResultContent() {
       {isApproved && (
         <div className={styles.congratsBanner}>
           Congratulations. Dear <strong>{data.fullName}</strong>, your visa is ready.{' '}
-          <span className={styles.printLink} onClick={() => printOnlyDoc(data.applicationNumber)}>
+          <span className={styles.printLink} onClick={() => printOnlyDoc(data.applicationNumber, visaDocUrl, data.visaDocumentType)}>
             Print it here
           </span>
         </div>
@@ -169,7 +185,7 @@ function ResultContent() {
           </div>
 
           <div className={styles.printBtnWrap}>
-            <button className={styles.printBtn} onClick={() => printOnlyDoc(data.applicationNumber)}>
+            <button className={styles.printBtn} onClick={() => printOnlyDoc(data.applicationNumber, visaDocUrl, data.visaDocumentType)}>
               PRINT RESULT
             </button>
           </div>
