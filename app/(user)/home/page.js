@@ -18,7 +18,7 @@ export default function HomePage() {
       <Header />
 
       {/* ─── HERO IMAGES ─── */}
-      <div className="pub-hero">
+      <div className="pub-hero pub-content">
         <Image
           src={img1}
           alt="Company Logo"
