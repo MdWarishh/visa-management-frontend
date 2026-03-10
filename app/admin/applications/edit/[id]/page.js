@@ -8,6 +8,34 @@ import toast from 'react-hot-toast';
 
 const STATUSES  = ['Pending','Under Review','Approved','Rejected','Issued'];
 const isNew = (id) => id === 'new';
+
+const COUNTRIES = [
+  'Afghanistan','Albania','Algeria','Andorra','Angola','Antigua and Barbuda','Argentina','Armenia',
+  'Australia','Austria','Azerbaijan','Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium',
+  'Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei',
+  'Bulgaria','Burkina Faso','Burundi','Cabo Verde','Cambodia','Cameroon','Canada',
+  'Central African Republic','Chad','Chile','China','Colombia','Comoros','Congo (Brazzaville)',
+  'Congo (Kinshasa)','Costa Rica','Croatia','Cuba','Cyprus','Czech Republic','Denmark','Djibouti',
+  'Dominica','Dominican Republic','Ecuador','Egypt','El Salvador','Equatorial Guinea','Eritrea',
+  'Estonia','Eswatini','Ethiopia','Fiji','Finland','France','Gabon','Gambia','Georgia','Germany',
+  'Ghana','Greece','Grenada','Guatemala','Guinea','Guinea-Bissau','Guyana','Haiti','Honduras',
+  'Hungary','Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy','Jamaica',
+  'Japan','Jordan','Kazakhstan','Kenya','Kiribati','Kosovo','Kuwait','Kyrgyzstan','Laos','Latvia',
+  'Lebanon','Lesotho','Liberia','Libya','Liechtenstein','Lithuania','Luxembourg','Madagascar',
+  'Malawi','Malaysia','Maldives','Mali','Malta','Marshall Islands','Mauritania','Mauritius','Mexico',
+  'Micronesia','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique','Myanmar','Namibia',
+  'Nauru','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria','North Korea',
+  'North Macedonia','Norway','Oman','Pakistan','Palau','Palestine','Panama','Papua New Guinea',
+  'Paraguay','Peru','Philippines','Poland','Portugal','Qatar','Romania','Russia','Rwanda',
+  'Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines','Samoa','San Marino',
+  'Sao Tome and Principe','Saudi Arabia','Senegal','Serbia','Seychelles','Sierra Leone','Singapore',
+  'Slovakia','Slovenia','Solomon Islands','Somalia','South Africa','South Korea','South Sudan',
+  'Spain','Sri Lanka','Sudan','Suriname','Sweden','Switzerland','Syria','Taiwan','Tajikistan',
+  'Tanzania','Thailand','Timor-Leste','Togo','Tonga','Trinidad and Tobago','Tunisia','Turkey',
+  'Turkmenistan','Tuvalu','Uganda','Ukraine','United Arab Emirates','United Kingdom',
+  'United States','Uruguay','Uzbekistan','Vanuatu','Vatican City','Venezuela','Vietnam',
+  'Yemen','Zambia','Zimbabwe',
+];
 const toDateInput = (d) => { if (!d) return ''; return new Date(d).toISOString().slice(0, 10); };
 
 /* ── Responsive styles injected once ── */
@@ -248,25 +276,35 @@ export default function EditPage() {
                 </div>
 
                 {/* ID Number field */}
-                <div className="fg" style={{ gridColumn:'1 / -1' }}>
-                  <label>
-                    {form.identifierType === 'passport' ? 'Passport Number' : 'Control Number'}
-                    <span style={{ color:'#ef4444' }}> *</span>
-                  </label>
-                  {form.identifierType === 'passport' ? (
+                {form.identifierType === 'passport' ? (
+                  <div className="fg" style={{ gridColumn:'1 / -1' }}>
+                    <label>Passport Number <span style={{ color:'#ef4444' }}>*</span></label>
                     <input className="fi" placeholder="e.g. A1234567" readOnly={readOnly || !creating}
                       value={form.passportNumber}
                       onChange={e => setForm(p => ({ ...p, passportNumber: e.target.value.toUpperCase() }))}
                       style={readOnly || !creating ? { background:'#f9fafb', color:'#6b7280' } : {}}
                     />
-                  ) : (
-                    <input className="fi" placeholder="e.g. CTL-2024-001" readOnly={readOnly}
-                      value={form.controlNumber}
-                      onChange={e => setForm(p => ({ ...p, controlNumber: e.target.value.toUpperCase() }))}
-                      style={readOnly ? { background:'#f9fafb', color:'#6b7280' } : {}}
-                    />
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="fg">
+                      <label>Control Number <span style={{ color:'#ef4444' }}>*</span></label>
+                      <input className="fi" placeholder="e.g. CTL-2024-001" readOnly={readOnly}
+                        value={form.controlNumber}
+                        onChange={e => setForm(p => ({ ...p, controlNumber: e.target.value.toUpperCase() }))}
+                        style={readOnly ? { background:'#f9fafb', color:'#6b7280' } : {}}
+                      />
+                    </div>
+                    <div className="fg">
+                      <label>Passport Number</label>
+                      <input className="fi" placeholder="e.g. A1234567" readOnly={readOnly || !creating}
+                        value={form.passportNumber}
+                        onChange={e => setForm(p => ({ ...p, passportNumber: e.target.value.toUpperCase() }))}
+                        style={readOnly || !creating ? { background:'#f9fafb', color:'#6b7280' } : {}}
+                      />
+                    </div>
+                  </>
+                )}
 
                 <div className="fg">
                   <label>Full Name <span style={{ color:'#ef4444' }}>*</span></label>
@@ -330,8 +368,10 @@ export default function EditPage() {
 
                 <div className="fg">
                   <label>Country <span style={{ color:'#ef4444' }}>*</span></label>
-                  <input className="fi" placeholder="e.g. India" readOnly={readOnly}
-                    value={form.country} onChange={set('country')} />
+                  <select className="sel" disabled={readOnly} value={form.country} onChange={set('country')}>
+                    <option value="">— Choose Country —</option>
+                    {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
                 </div>
 
                 <div className="fg">

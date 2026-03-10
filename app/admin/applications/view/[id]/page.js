@@ -148,11 +148,16 @@ export default function ViewDetailsPage() {
 
   const sc = STATUS_COLORS[data.status] || { bg:'#f3f4f6', color:'#374151' };
   const isApproved = data.status === 'Approved' || data.status === 'Issued';
-  const idLabel = data.identifierType === 'control' ? 'Control Number' : 'Passport No';
-  const idValue = data.identifierType === 'control' ? (data.controlNumber || '—') : (data.passportNumber || '—');
-
   const rows = [
-    { label: idLabel,            value: idValue },
+    ...(data.identifierType === 'control'
+      ? [
+          { label: 'Control Number', value: data.controlNumber  || '—' },
+          { label: 'Passport No',    value: data.passportNumber || '—' },
+        ]
+      : [
+          { label: 'Passport No',    value: data.passportNumber || '—' },
+        ]
+    ),
     // { label: 'Visa No',          value: data.visaNumber       || '—' },
     { label: 'Name',             value: data.fullName         || '—' },
     { label: 'Date of birth',    value: fmt(data.dateOfBirth)        },

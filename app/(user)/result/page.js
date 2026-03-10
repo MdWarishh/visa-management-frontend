@@ -91,9 +91,6 @@ function ResultContent() {
   if (!data) return null;
 
   const isApproved  = data.status === 'Approved' || data.status === 'Issued';
-  const idLabel     = data.identifierType === 'control' ? 'Control Number' : 'Passport No';
-  const idValue     = data.identifierType === 'control' ? (data.controlNumber || '—') : (data.passportNumber || '—');
-
   // Visa doc URL — verified via query params
   const visaDocUrl = data.hasVisaDocument
     ? `/api/candidates/public/visa-doc/${data.candidateId}?${
@@ -113,7 +110,15 @@ function ResultContent() {
 
   // Show Passport No / Control No based on identifierType
   const rows = [
-    { label: idLabel,           value: idValue },
+    ...(data.identifierType === 'control'
+      ? [
+          { label: 'Control Number', value: data.controlNumber  || '—' },
+          { label: 'Passport No',    value: data.passportNumber || '—' },
+        ]
+      : [
+          { label: 'Passport No',    value: data.passportNumber || '—' },
+        ]
+    ),
     // { label: 'Visa No',         value: data.visaNumber       || '—' },
     { label: 'Name',            value: data.fullName         || '—' },
     { label: 'Date of birth',   value: fmt(data.dateOfBirth)        },
